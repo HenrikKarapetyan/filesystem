@@ -1,5 +1,5 @@
 {
-  "name": "henrik/silesystem",
+  "name": "henrik/filesystem",
   "type": "library",
   "license": "MIT",
   "minimum-stability": "dev",
