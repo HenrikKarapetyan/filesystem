@@ -13,7 +13,6 @@ use SplFileInfo;
 
 class Filesystem implements FilesystemInterface
 {
-
     /**
      * {@inheritDoc}
      */
@@ -50,7 +49,7 @@ class Filesystem implements FilesystemInterface
     public static function getPhpClassesFromDirectory(string $directory, string $namespace, ?array $excludedPaths = []): array
     {
 
-        return self::walkFromDirectories($directory, 'php', $excludedPaths, function (string $directory, SplFileInfo $file) use ($namespace) {
+        return self::walkFromDirectories($directory, 'php', $excludedPaths, function (string $directory, SplFileInfo $file) use ($namespace) { // @phpstan-ignore-line
 
             $className = $file->getBasename('.' . $file->getExtension());
 
