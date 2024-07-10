@@ -53,11 +53,15 @@ class Filesystem implements FilesystemInterface
 
             $className = $file->getBasename('.' . $file->getExtension());
 
-            $filePath = str_replace('/', '\\', str_replace($directory, '', $file->getPath()));
-            $class    = sprintf('%s%s\\%s', $namespace, $filePath, $className);
+            if ($file->isFile()) {
+                $filePath = str_replace('/', '\\', str_replace($directory, '', $file->getPath()));
+                $class    = sprintf('%s%s\\%s', $namespace, $filePath, $className);
 
-            if (class_exists($class)) {
-                return $class;
+                if (class_exists($class)) {
+                    return $class;
+                }
+
+                return null;
             }
 
             return null;
@@ -158,6 +162,23 @@ class Filesystem implements FilesystemInterface
     {
         self::copyDirectory($source, $destination, $fileExtension, $excludedPaths);
         self::deleteDirectory($source);
+    }
+
+    public static function getPhpSourcesFromDirectory(string $directory, string $namespace, ?array $excludedPaths = []): array
+    {
+        return self::walkFromDirectories($directory, 'php', $excludedPaths, function (string $directory, SplFileInfo $file) use ($namespace) { // @phpstan-ignore-line
+
+            $className = $file->getBasename('.' . $file->getExtension());
+
+            if ($file->isFile()) {
+                $filePath = str_replace('/', '\\', str_replace($directory, '', $file->getPath()));
+
+                return sprintf('%s%s\\%s', $namespace, $filePath, $className);
+
+            }
+
+            return null;
+        });
     }
 
     /**
